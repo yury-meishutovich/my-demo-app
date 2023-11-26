@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useMsal } from "@azure/msal-react";
 import { getMatches, secureApiCall } from '../services';
 import {
@@ -23,16 +23,14 @@ export const Matches = (): React.JSX.Element => {
   const [matches, setMatches] = useState<MatchState[] | undefined>();
   const { instance, inProgress, accounts } = useMsal();
   const showProgressBar = useContext<(visiable: boolean) => void>(BusyContext);
-
+  const showProgressBarRef = useRef(showProgressBar);
   useEffect(() => {
     if (!matches) {
-      showProgressBar(true);
-      secureApiCall(instance, inProgress, accounts, (token: string) => getMatches(token).then(r => { setMatches(r); showProgressBar(false); }).catch(e => console.error(e)));
+      showProgressBarRef.current(true);
+      secureApiCall(instance, inProgress, accounts, (token: string) => getMatches(token).then(r => { setMatches(r); showProgressBarRef.current(false); }).catch(e => console.error(e)));
     }
-  }, [instance, inProgress, accounts, matches, showProgressBar]);
+  }, [instance, inProgress, accounts, matches]);
 
-
-  
 
   return (
     <Table>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { Challenge } from './Challenge'
 import { Stack } from '@mui/material';
 import { useNavigate } from "react-router-dom";
@@ -15,16 +15,17 @@ interface ChallengeState {
 
 export const Challenges = (): React.JSX.Element => {
   const showProgressBar = useContext<(visiable: boolean) => void>(BusyContext);
+  const showProgressBarRef = useRef(showProgressBar);
   const [challenges, setChallenges] = useState<ChallengeState[] | undefined>();
   const { instance, inProgress, accounts } = useMsal();
 
 
   useEffect(() => {
     if (!challenges) {
-      showProgressBar(true);
-      secureApiCall(instance, inProgress, accounts, (token) => getChallanges(token).then(r => { setChallenges(r); showProgressBar(false); }).catch(e => { console.error(e); }));
+      showProgressBarRef.current(true);
+      secureApiCall(instance, inProgress, accounts, (token) => getChallanges(token).then(r => { setChallenges(r); showProgressBarRef.current(false); }).catch(e => { console.error(e); }));
     }
-  }, [instance, inProgress, accounts, challenges, showProgressBar]);
+  }, [instance, inProgress, accounts, challenges]);
 
   
   const navigate = useNavigate();

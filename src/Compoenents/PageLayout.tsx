@@ -29,7 +29,7 @@ export const PageLayout = (): React.JSX.Element => {
         <CssBaseline />
         <AppBar position="relative">
           <Toolbar>
-            <Button href="/" color="inherit">players</Button>
+            <Button href="#" color="inherit">players</Button>
             <Button href="#/challenges" color="inherit">Challanges</Button>
             <Button href='#/matches' color="inherit">Matches</Button>
           </Toolbar>
@@ -62,8 +62,8 @@ export const PageLayout = (): React.JSX.Element => {
                   <HashRouter>
                     <Routes>
                       <Route path="/" Component={Players} />
-                      <Route path="/Challenges" Component={Challenges} />
-                      <Route path="/Matches" Component={Matches} />
+                      <Route path="/challenges" Component={Challenges} />
+                      <Route path="/matches" Component={Matches} />
                     </Routes>
                   </HashRouter>
                 </Stack>

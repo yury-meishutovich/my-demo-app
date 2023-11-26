@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { getPlayers, issueChallenge, secureApiCall } from '../services';
 import { BusyContext } from './BusyContext';
@@ -25,21 +25,21 @@ export const Players = (): React.JSX.Element => {
   const { instance, inProgress, accounts } = useMsal();
 
   const showProgressBar = useContext<(visiable: boolean) => void>(BusyContext);
+  const showProgressBarRef = useRef(showProgressBar);
 
   useEffect(() => {
     if (!players) {
-      showProgressBar(true);
-      secureApiCall(instance, inProgress, accounts, (token: string) => getPlayers(token).then(r => { setPlayers(r); showProgressBar(false); }).catch(e => console.error(e)));
+      showProgressBarRef.current(true);
+      secureApiCall(instance, inProgress, accounts, (token: string) => getPlayers(token).then(r => { setPlayers(r); showProgressBarRef.current(false); }).catch(e => console.error(e)));
     }
-  }, [instance, accounts, inProgress, players, showProgressBar]);
-
+  }, [instance, accounts, inProgress, players]);
 
 
   const navigate = useNavigate();
 
 
   const handleOnClinkNewChallenge = async (playerId: number): Promise<void> => {
-    showProgressBar(true);
+    showProgressBarRef.current(true);
     secureApiCall(instance, inProgress, accounts, (token: string) => issueChallenge(token, playerId).then(() => navigate("/challenges")).catch(e => console.error(e)));
   }
 
