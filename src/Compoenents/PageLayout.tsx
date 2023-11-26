@@ -8,18 +8,18 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Route, Routes, HashRouter  } from 'react-router-dom';
 import { Challenges } from './Challenges';
 import { Players } from './Players';
 import { Matches } from './Matches';
 import { BusyContext } from './BusyContext';
-import { MsalAuthenticationTemplate, useMsal } from "@azure/msal-react";
+import { MsalAuthenticationTemplate } from "@azure/msal-react";
 import { InteractionType } from "@azure/msal-browser";
 
 
 
 export const PageLayout = (): React.JSX.Element => {
-
+  
 
   const [busy, setBusy] = useState(true)
 
@@ -30,8 +30,8 @@ export const PageLayout = (): React.JSX.Element => {
         <AppBar position="relative">
           <Toolbar>
             <Button href="/" color="inherit">players</Button>
-            <Button href="/Challenges" color="inherit">Challanges</Button>
-            <Button href='/Matches' color="inherit">Matches</Button>
+            <Button href="#/challenges" color="inherit">Challanges</Button>
+            <Button href='#/matches' color="inherit">Matches</Button>
           </Toolbar>
         </AppBar>
         <main>
@@ -59,13 +59,13 @@ export const PageLayout = (): React.JSX.Element => {
                   direction="row"
                   spacing={2}
                   justifyContent="center">
-                  <BrowserRouter>
+                  <HashRouter>
                     <Routes>
                       <Route path="/" Component={Players} />
                       <Route path="/Challenges" Component={Challenges} />
                       <Route path="/Matches" Component={Matches} />
                     </Routes>
-                  </BrowserRouter>
+                  </HashRouter>
                 </Stack>
               </BusyContext.Provider>
             </Container>
