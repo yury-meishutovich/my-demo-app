@@ -1,28 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import LinearProgress from '@mui/material/LinearProgress';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Route, Routes, HashRouter  } from 'react-router-dom';
+import { Route, Routes, HashRouter } from 'react-router-dom';
 import { Challenges } from './Challenges';
 import { Players } from './Players';
 import { Matches } from './Matches';
-import { BusyContext } from './BusyContext';
+import { BusyBackgroundProvider } from './BusyBackgroundProvider';
 import { MsalAuthenticationTemplate } from "@azure/msal-react";
 import { InteractionType } from "@azure/msal-browser";
+import { BusyBackground } from './BusyBackground';
 
 
 
 export const PageLayout = (): React.JSX.Element => {
-  
-
-  const [busy, setBusy] = useState(true)
-
   return (
     <>
       <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}>
@@ -52,22 +49,31 @@ export const PageLayout = (): React.JSX.Element => {
               >
                 One More Ladder
               </Typography>
-              {busy && <Box sx={{ width: '100%' }}><LinearProgress /> </Box>}
-              <BusyContext.Provider value={(visiable: boolean) => setBusy(visiable)}>
-                <Stack
-                  sx={{ pt: 4 }}
-                  direction="row"
-                  spacing={2}
-                  justifyContent="center">
-                  <HashRouter>
-                    <Routes>
-                      <Route path="/" Component={Players} />
-                      <Route path="/challenges" Component={Challenges} />
-                      <Route path="/matches" Component={Matches} />
-                    </Routes>
-                  </HashRouter>
-                </Stack>
-              </BusyContext.Provider>
+              <Snackbar
+                open={true}
+                autoHideDuration={600}
+                message="Note archived"
+              />
+              <BusyBackgroundProvider>
+                <>
+                  <BusyBackground />
+                  <Stack
+                    sx={{ pt: 4 }}
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center">
+
+                    <HashRouter>
+                      <Routes>
+                        <Route path="/" Component={Players} />
+                        <Route path="/challenges" Component={Challenges} />
+                        <Route path="/matches" Component={Matches} />
+                      </Routes>
+                    </HashRouter>
+                  </Stack>
+                </>
+              </BusyBackgroundProvider>
+
             </Container>
           </Box>
 

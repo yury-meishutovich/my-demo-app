@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect,  useRef } from 'react';
 import { useMsal } from "@azure/msal-react";
 import { getMatches, secureApiCall } from '../services';
 import {
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { BusyContext } from './BusyContext';
+import { useBusyBackgroundDispatch } from './BusyBackgroundProvider';
 
 
 interface MatchState {
@@ -22,12 +22,14 @@ export const Matches = (): React.JSX.Element => {
 
   const [matches, setMatches] = useState<MatchState[] | undefined>();
   const { instance, inProgress, accounts } = useMsal();
-  const showProgressBar = useContext<(visiable: boolean) => void>(BusyContext);
-  const showProgressBarRef = useRef(showProgressBar);
+  
+  const dispatch = useBusyBackgroundDispatch();
+  const showProgressBarRef = useRef(dispatch);
+  
   useEffect(() => {
     if (!matches) {
       showProgressBarRef.current(true);
-      secureApiCall(instance, inProgress, accounts, (token: string) => getMatches(token).then(r => { setMatches(r); showProgressBarRef.current(false); }).catch(e => console.error(e)));
+      secureApiCall(instance, inProgress, accounts, (token: string) => getMatches(token).then(r => { setMatches(r); showProgressBarRef.current(false);  }).catch(e => console.error(e)));
     }
   }, [instance, inProgress, accounts, matches]);
 
